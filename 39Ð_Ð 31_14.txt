@@ -1,0 +1,317 @@
+
+    public class Program
+    {
+        private static void Write(string path)
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                Console.Write("Input text: ");
+                string text = Console.ReadLine();
+                byte[] bytes = Encoding.UTF8.GetBytes(text);
+                stream.Write(bytes, 0, bytes.Length);
+                Console.WriteLine("Information OK!");
+            }
+        }
+
+        private static string Read(string path)
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                byte[] bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, bytes.Length);
+                return Encoding.UTF8.GetString(bytes);
+            }
+        }
+
+        private static void WriteTxt(string path)
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Create))
+            {
+                using (StreamWriter sw = new StreamWriter(stream, Encoding.Unicode))
+                {
+                    Console.Write("Input text: ");
+                    string text = Console.ReadLine();
+
+                    sw.WriteLine(text);// Hello
+
+                    foreach (char item in text)
+                    {
+                        sw.Write($"{item} "); // H e l l o
+                    }
+
+                    Console.WriteLine("Information OK!");
+                }
+            }
+        }
+
+        private static string ReadTxt(string path)
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Open))
+            {
+                using (StreamReader sr = new StreamReader(stream, Encoding.Unicode))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+        }
+
+        private static void WriteBin(string path)
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Create))
+            {
+                using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Unicode))
+                {
+                    Console.Write("Input text: ");
+                    string text = Console.ReadLine();
+
+                    double salary = 4567.83;
+                    int number = 5619;
+                    char symbol = 'T';
+
+                    bw.Write(salary);
+                    bw.Write(text);
+                    bw.Write(number);
+                    bw.Write(symbol);
+
+                    Console.WriteLine("Information OK!");
+                }
+            }
+        }
+
+        private static string ReadBin(string path)
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Open))
+            {
+                using (BinaryReader br = new BinaryReader(stream, Encoding.Unicode))
+                {
+                    return $"{br.ReadDouble()}\n{br.ReadString()}\n{br.ReadInt32()}\n{br.ReadChar()}\n";
+                }
+            }
+        }
+
+        private static void WriteTxtFile(string path)
+        {
+            using (StreamWriter writer = File.CreateText(path))
+            {
+                Console.Write("Input text: ");
+                string text = Console.ReadLine();
+
+                writer.WriteLine(text);// Hello
+
+                foreach (char item in text)
+                {
+                    writer.Write($"{item} "); // H e l l o
+                }
+
+                Console.WriteLine("Information OK!");
+            }
+        }
+
+        private static string ReadTxtFile(string path)
+        {
+            using (StreamReader reader = File.OpenText(path))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private static void WriteBinFileInfo(string path)
+        {
+            FileInfo fileInfo = new FileInfo(path);
+            using (FileStream stream = fileInfo.Open(FileMode.Create))
+            {
+                Console.Write("Input text: ");
+                string text = Console.ReadLine();
+                byte[] bytes = Encoding.UTF8.GetBytes(text);
+                stream.Write(bytes, 0, bytes.Length);
+                Console.WriteLine("Information OK!");
+            }
+        }
+
+        private static string ReadBinFileInfo(string path)
+        {
+            using (FileStream stream = new FileInfo(path).OpenRead())
+            {
+                byte[] bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, bytes.Length);
+                return Encoding.UTF8.GetString(bytes);
+            }
+        }
+
+        public static void Main()
+        {
+            //FileStream stream = new FileStream(...);
+            //try
+            //{
+
+            //}
+            //catch (...)
+            //{
+            //}
+            //finally
+            //{
+            //    stream.Close();
+            //}
+
+            //string path = @"D:\Test\Test.bd2";
+            string path = "Test.bd2";
+            string pathTxt = "Test.txt";
+            string pathBin = "Test.bin";
+            try
+            {
+                /*
+                Write(path);
+
+                Console.WriteLine(Read(path));
+                
+
+                WriteTxt(pathTxt);
+
+                Console.WriteLine(ReadTxt(pathTxt));
+
+
+                WriteBin(pathBin);
+
+                Console.WriteLine(ReadBin(pathBin));
+                */
+
+                /*
+                string directory = @"D:\Test\Dir";
+
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                foreach (string item in Directory.GetDirectories(@"C:\"))
+                {
+                    Console.WriteLine(item);
+                }
+                
+                WriteTxtFile("Test1.txt");
+
+                Console.WriteLine(ReadTxtFile("Test1.txt"));
+                */
+
+                DirectoryInfo dir = new DirectoryInfo(@"D:\Test\Dir\DirInfo");
+                if (!dir.Exists)
+                {
+                    dir.Create();
+                }
+                Console.WriteLine(dir.LastAccessTime);
+
+                DirectoryInfo dir1 = dir.CreateSubdirectory("Subdir");
+
+                DirectoryInfo directoryInfo = new DirectoryInfo("C:\\");
+
+                foreach (DirectoryInfo item in directoryInfo.GetDirectories())
+                {
+                    Console.WriteLine(item.Name);
+                }
+
+                Console.WriteLine();
+
+                directoryInfo = new DirectoryInfo(@"C:\Users\Bux6\Desktop");
+
+                foreach (FileInfo item in directoryInfo.GetFiles("*.txt"))
+                {
+                    Console.WriteLine(item.Name);
+                }
+
+                WriteBinFileInfo("Test1.bin");
+
+                Console.WriteLine(ReadBinFileInfo("Test1.bin"));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
+    class CoderAttribute : Attribute
+    {
+        private string _name;
+        private DateTime _date;
+
+        public CoderAttribute()
+        {
+            _name = "Jack";
+            _date = DateTime.Now;
+        }
+
+        public CoderAttribute(string name, string date)
+        {
+            try
+            {
+                _name = name;
+                _date = Convert.ToDateTime(date);
+            }
+            catch
+            {
+                _date = DateTime.Now;
+            }
+        }
+        public override string ToString()
+        {
+            return $"{_name}: {_date}";
+        }
+    }
+
+    [Coder]
+    class Example
+    {
+        // ...
+
+        [Coder("Jeena", "2021-1-23")]
+        [Coder("Jeena", "2020-11-26")]
+        public int Summ(int x, int y)
+        {
+            return x + y;
+        }
+    }
+
+    class MyClass : Example
+    {
+
+    }
+
+    public class Program
+    {
+        [Obsolete]
+        private static void M()
+        {
+            Console.WriteLine("M");
+        }
+
+        public static void Main()
+        {
+            M();
+
+            foreach (object item in typeof(Example).GetCustomAttributes(true))
+            {
+                Console.WriteLine(item);
+            }
+
+            foreach (MemberInfo item in typeof(Example).GetMembers())
+            {
+                foreach (object attr in item.GetCustomAttributes(true))
+                {
+                    Console.WriteLine(attr);
+                }
+            }
+
+            foreach (object item in typeof(MyClass).GetCustomAttributes(true))
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.ReadKey();
+        }
+    }
